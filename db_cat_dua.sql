@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS `m_guru` (
 -- Membuang data untuk tabel db_cat_dua.m_guru: ~5 rows (lebih kurang)
 /*!40000 ALTER TABLE `m_guru` DISABLE KEYS */;
 INSERT IGNORE INTO `m_guru` (`id`, `nip`, `nama`) VALUES
-	(1, '1001', 'Pembuat Soal 1'),
-	(2, '1002', 'Pembuat Soal 2'),
-	(3, '1003', 'Pembuat Soal 3');
+	(1, '1001', 'Pemateri 1'),
+	(2, '1002', 'Pemateri 2'),
+	(3, '1003', 'Pemateri 3');
 /*!40000 ALTER TABLE `m_guru` ENABLE KEYS */;
 
 -- membuang struktur untuk table db_cat_dua.m_mapel
