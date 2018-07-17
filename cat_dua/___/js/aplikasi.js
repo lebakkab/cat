@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+
 	$('.gambar').each(function(){
 		var url = $(this).attr("src");
 		$(this).zoom({url: url});
@@ -13,9 +13,9 @@ $(document).ready(function() {
 	if (url == "m_siswa") {
 		pagination("datatabel", base_url+"adm/m_siswa/data", []);
 	} else if (url == "m_guru") {
-		pagination("datatabel", base_url+"adm/m_guru/data", []);		
+		pagination("datatabel", base_url+"adm/m_guru/data", []);
 	} else if (url == "m_mapel") {
-		pagination("datatabel", base_url+"adm/m_mapel/data", []);		
+		pagination("datatabel", base_url+"adm/m_mapel/data", []);
 	} else if (url == "m_soal") {
 		pagination("datatabel", base_url+"adm/m_soal/data", []);
 
@@ -35,24 +35,24 @@ $(document).ready(function() {
 				CKEDITOR.replace('editornya_d');
 				CKEDITOR.replace('editornya_e');
 			}
-		}		
+		}
 	} else if (url == "h_ujian") {
 		if (url2 == "det") {
 			pagination("datatabel", base_url+"adm/h_ujian/data_det/"+url3, []);
 		} else {
-			pagination("datatabel", base_url+"adm/h_ujian/data", []);	
+			pagination("datatabel", base_url+"adm/h_ujian/data", []);
 		}
 	} else if (url == "m_ujian") {
 		if (url2 == "det") {
 			pagination("datatabel", base_url+"adm/m_ujian/data_det/"+url3, []);
 		} else {
-			pagination("datatabel", base_url+"adm/m_ujian/data", []);	
+			pagination("datatabel", base_url+"adm/m_ujian/data", []);
 		}
 	} else if (url == "ikut_ujian") {
 		if (url2 == "token") {
 			timer();
-		} 
-	} 
+		}
+	}
 });
 
 function timer() {
@@ -65,7 +65,7 @@ function timer() {
 
 	if (statuse == 1) {
 		$("#btn_mulai").html('<a href="#" class="btn btn-success btn-lg" id="tbl_mulai" onclick="return konfirmasi_token('+id_ujian+')"><i class="fa fa-check-circle"></i> MULAI</a>');
-		
+
 		$('#waktu_akhir_ujian').countdowntimer({
 	        startDate : tgl_sekarang,
 	        dateAndTime : tgl_terlambat,
@@ -140,7 +140,7 @@ function pagination(indentifier, url, config) {
                 $("#"+indentifier).css("display","none");
             }
         }
-    }); 
+    });
 }
 
 function login(e) {
@@ -156,13 +156,13 @@ function login(e) {
 				$("#konfirmasi").html("<div class='alert alert-danger'>"+r.log.keterangan+"</div>");
 			} else {
 				$("#konfirmasi").html("<div class='alert alert-success'>"+r.log.keterangan+"</div>");
-				window.location.assign(base_url+"adm"); 
+				window.location.assign(base_url+"adm");
 			}
 		}
 	});
 	return false;
 }
-/* 
+/*
 =======================================
 =======================================
 */
@@ -175,7 +175,7 @@ function konfirmasi_token(id) {
 		return false;
 	} else {
 		alert("Token benar..!");
-		window.location.assign(base_url+"adm/ikut_ujian/_/"+id); 
+		window.location.assign(base_url+"adm/ikut_ujian/_/"+id);
 	}
 }
 
@@ -187,14 +187,14 @@ function m_soal_h(id) {
 			url: base_url+"adm/m_soal/hapus/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_soal"); 
+					window.location.assign(base_url+"adm/m_soal");
 				} else {
 					console.log('gagal');
 				}
 			}
 		});
 	}
-	
+
 	return false;
 }
 //ujian
@@ -218,13 +218,13 @@ function m_ujian_e(id) {
 			__ambil_jumlah_soal(data.id_mapel);
 		}
 	});
-	
+
 	return false;
 }
 function m_ujian_s() {
 	var f_asal	= $("#f_ujian");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/m_ujian/simpan",
 		data: JSON.stringify(form),
@@ -232,7 +232,7 @@ function m_ujian_s() {
 		contentType: 'application/json; charset=utf-8'
 	}).done(function(response) {
 		if (response.status == "ok") {
-			window.location.assign(base_url+"adm/m_ujian"); 
+			window.location.assign(base_url+"adm/m_ujian");
 		} else {
 			console.log('gagal');
 		}
@@ -246,14 +246,14 @@ function m_ujian_h(id) {
 			url: base_url+"adm/m_ujian/hapus/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_ujian"); 
+					window.location.assign(base_url+"adm/m_ujian");
 				} else {
 					console.log('gagal');
 				}
 			}
 		});
 	}
-	
+
 	return false;
 }
 function refresh_token(id) {
@@ -262,13 +262,13 @@ function refresh_token(id) {
 		url: base_url+"adm/m_ujian/refresh_token/"+id,
 		success: function(response) {
 			if (response.status == "ok") {
-				pagination("datatabel", base_url+"adm/m_ujian/data", []);	
+				pagination("datatabel", base_url+"adm/m_ujian/data", []);
 			} else {
 				console.log('gagal');
 			}
 		}
 	});
-	
+
 	return false;
 }
 
@@ -292,7 +292,7 @@ function m_siswa_e(id) {
 function m_siswa_s() {
 	var f_asal	= $("#f_siswa");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/m_siswa/simpan",
 		data: JSON.stringify(form),
@@ -300,7 +300,7 @@ function m_siswa_s() {
 		contentType: 'application/json; charset=utf-8'
 	}).done(function(response) {
 		if (response.status == "ok") {
-			window.location.assign(base_url+"adm/m_siswa"); 
+			window.location.assign(base_url+"adm/m_siswa");
 		} else {
 			console.log('gagal');
 		}
@@ -314,7 +314,7 @@ function m_siswa_h(id) {
 			url: base_url+"adm/m_siswa/hapus/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_siswa"); 
+					window.location.assign(base_url+"adm/m_siswa");
 				} else {
 					console.log('gagal');
 				}
@@ -324,13 +324,13 @@ function m_siswa_h(id) {
 	return false;
 }
 function m_siswa_u(id) {
-	if (confirm('Anda yakin..? Username dan Password otomatis adalah NIM ..!')) {
+	if (confirm('Anda yakin..? Username dan Password otomatis adalah Username ..!')) {
 		$.ajax({
 			type: "GET",
 			url: base_url+"adm/m_siswa/user/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_siswa"); 
+					window.location.assign(base_url+"adm/m_siswa");
 				} else {
 					alert(response.caption);
 				}
@@ -340,13 +340,13 @@ function m_siswa_u(id) {
 	return false;
 }
 function m_siswa_ur(id) {
-	if (confirm('Anda yakin..? Username dan Password otomatis adalah NIM ..!')) {
+	if (confirm('Anda yakin..? Username dan Password otomatis adalah Username ..!')) {
 		$.ajax({
 			type: "GET",
 			url: base_url+"adm/m_siswa/user_reset/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_siswa"); 
+					window.location.assign(base_url+"adm/m_siswa");
 				} else {
 					alert(response.caption);
 				}
@@ -362,7 +362,7 @@ function m_siswa_non_aktif(id) {
 			url: base_url+"adm/m_siswa/non_aktifkan/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_siswa"); 
+					window.location.assign(base_url+"adm/m_siswa");
 				} else {
 					alert(response.caption);
 				}
@@ -389,7 +389,7 @@ function m_guru_e(id) {
 function m_guru_s() {
 	var f_asal	= $("#f_guru");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/m_guru/simpan",
 		data: JSON.stringify(form),
@@ -397,7 +397,7 @@ function m_guru_s() {
 		contentType: 'application/json; charset=utf-8'
 	}).done(function(response) {
 		if (response.status == "ok") {
-			window.location.assign(base_url+"adm/m_guru"); 
+			window.location.assign(base_url+"adm/m_guru");
 		} else {
 			console.log('gagal');
 		}
@@ -411,7 +411,7 @@ function m_guru_h(id) {
 			url: base_url+"adm/m_guru/hapus/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_guru"); 
+					window.location.assign(base_url+"adm/m_guru");
 				} else {
 					console.log('gagal');
 				}
@@ -427,7 +427,7 @@ function m_guru_u(id) {
 			url: base_url+"adm/m_guru/user/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_guru"); 
+					window.location.assign(base_url+"adm/m_guru");
 				} else {
 					alert(response.caption);
 				}
@@ -443,7 +443,7 @@ function m_guru_ur(id) {
 			url: base_url+"adm/m_guru/user_reset/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_guru"); 
+					window.location.assign(base_url+"adm/m_guru");
 				} else {
 					alert(response.caption);
 				}
@@ -459,8 +459,8 @@ function m_guru_matkul(id) {
 		success: function(data) {
 			if (data.status == "ok") {
 				var jml_data	= Object.keys(data.data).length;
-				var hate 	= '<div class="modal fade" id="m_siswa_matkul" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 id="myModalLabel">Setting Mata Kuliah</h4></div><div class="modal-body"><form name="f_siswa_matkul" id="f_siswa_matkul" method="post" onsubmit="return m_guru_matkul_s();"><input type="hidden" name="id_mhs" id="id_mhs" value="'+id+'"><div id="konfirmasi"></div>';
-				
+				var hate 	= '<div class="modal fade" id="m_siswa_matkul" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 id="myModalLabel">Setting Jenis Soal</h4></div><div class="modal-body"><form name="f_siswa_matkul" id="f_siswa_matkul" method="post" onsubmit="return m_guru_matkul_s();"><input type="hidden" name="id_mhs" id="id_mhs" value="'+id+'"><div id="konfirmasi"></div>';
+
 				if (jml_data > 0) {
 					$.each(data.data, function(i, item) {
 						if (item.ok == "1") {
@@ -468,7 +468,7 @@ function m_guru_matkul(id) {
 						} else {
 							hate += '<label><input type="checkbox" value="'+item.id+'" name="id_mapel_'+item.id+'"> &nbsp;'+item.nama+'</label> &nbsp;&nbsp; ';
 						}
-					});				
+					});
 				} else {
 					hate += 'Belum ada data..';
 				}
@@ -485,7 +485,7 @@ function m_guru_matkul(id) {
 function m_guru_matkul_s() {
 	var f_asal	= $("#f_siswa_matkul");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/m_guru/simpan_matkul",
 		data: JSON.stringify(form),
@@ -493,15 +493,15 @@ function m_guru_matkul_s() {
 		contentType: 'application/json; charset=utf-8'
 	}).done(function(response) {
 		if (response.status == "ok") {
-			window.location.assign(base_url+"adm/m_guru"); 
+			window.location.assign(base_url+"adm/m_guru");
 		} else {
 			console.log('gagal');
 		}
 	});
-	
+
 	return false;
 }
-//mapel
+// jenis soal
 function m_mapel_e(id) {
 	$("#m_mapel").modal('show');
 	$.ajax({
@@ -518,7 +518,7 @@ function m_mapel_e(id) {
 function m_mapel_s() {
 	var f_asal	= $("#f_mapel");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/m_mapel/simpan",
 		data: JSON.stringify(form),
@@ -526,7 +526,7 @@ function m_mapel_s() {
 		contentType: 'application/json; charset=utf-8'
 	}).done(function(response) {
 		if (response.status == "ok") {
-			window.location.assign(base_url+"adm/m_mapel"); 
+			window.location.assign(base_url+"adm/m_mapel");
 		} else {
 			console.log('gagal');
 		}
@@ -540,7 +540,7 @@ function m_mapel_h(id) {
 			url: base_url+"adm/m_mapel/hapus/"+id,
 			success: function(response) {
 				if (response.status == "ok") {
-					window.location.assign(base_url+"adm/m_mapel"); 
+					window.location.assign(base_url+"adm/m_mapel");
 				} else {
 					console.log('gagal');
 				}
@@ -554,7 +554,7 @@ function __ambil_jumlah_soal(id_mapel) {
 		type: "GET",
 		url: base_url+"adm/m_ujian/jumlah_soal/"+id_mapel,
 		success: function(response) {
-			$("#jumlah_soal1").val(response.jumlah);	
+			$("#jumlah_soal1").val(response.jumlah);
 		}
 	});
 	return false;
@@ -575,7 +575,7 @@ function rubah_password() {
 function rubah_password_s() {
 	var f_asal	= $("#f_ubah_password");
 	var form	= getFormData(f_asal);
-	$.ajax({		
+	$.ajax({
 		type: "POST",
 		url: base_url+"adm/rubah_password/simpan",
 		data: JSON.stringify(form),

@@ -8,11 +8,11 @@
           <div id="konfirmasi"></div>
 
             <div class="form-group fgsoal">
-              <div class="col-md-2"><label>Mapel</label></div>
+              <div class="col-md-2"><label>Jenis Soal</label></div>
               <div class="col-md-10"><?php echo form_dropdown('id_mapel', $p_mapel, $d['id_mapel'], 'class="form-control" id="id_mapel" required'); ?></div>
             </div>
             <div class="form-group fgsoal">
-              <div class="col-md-2"><label>Guru</label></div>
+              <div class="col-md-2"><label>Pemateri</label></div>
               <div class="col-md-10"><?php echo form_dropdown('id_guru', $p_guru, $d['id_guru'], 'class="form-control" id="id_guru" required'); ?></div>
             </div>
 
@@ -20,7 +20,7 @@
               <div class="col-md-2"><label>Teks Soal</label></div>
               <div class="col-md-3">
                 <input type="file" name="gambar_soal" id="gambar_soal" class="btn btn-info upload">
-                <?php 
+                <?php
                 if (is_file('./upload/gambar_soal/'.$d['file'])) {
                   echo tampil_media('./upload/gambar_soal/'.$d['file'],"100%");
                 }
@@ -30,8 +30,8 @@
                 <textarea class="form-control" id="editornya" style="height: 50px;" name="soal"><?php echo $d['soal']; ?></textarea>
               </div>
             </div>
-            
-            <?php 
+
+            <?php
             for ($j = 0; $j < $jml_opsi; $j++) {
               $idx = $huruf_opsi[$j];
             ?>
@@ -40,7 +40,7 @@
               <div class="col-md-2"><label>Jawaban <?php echo $huruf_opsi[$j]; ?></label></div>
               <div class="col-md-3">
                 <input type="file" name="gj<?php echo $huruf_opsi[$j]; ?>" id="gambar_soal" class="btn btn-success upload"><br>
-                <?php 
+                <?php
                 if (is_file('./upload/gambar_opsi/'.$data_pc[$idx]['gambar'])) {
                   echo tampil_media('./upload/gambar_opsi/'.$data_pc[$idx]['gambar'],"100%");
                 }
@@ -52,12 +52,12 @@
             </div>
 
             <?php } ?>
-  
+
             <div class="form-group fgsoal">
               <div class="col-md-2"><label>Kunci Jawaban</label></div>
               <div class="col-md-2">
                 <select class="form-control" name="jawaban" id="jawaban" required>
-                  <?php 
+                  <?php
                   for($o = 0; $o < $jml_opsi; $o++) {
                     $_opsi = strtoupper($huruf_opsi[$o]);
                     if ($d['jawaban'] == $_opsi) {

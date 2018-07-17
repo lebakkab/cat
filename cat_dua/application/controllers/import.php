@@ -7,11 +7,11 @@ class Import extends CI_Controller {
 
         $this->kolom_xl = array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
 	}
-	
+
 	public function cek_aktif() {
 		if ($this->session->userdata('admin_valid') == false && $this->session->userdata('admin_id') == "") {
 			redirect('adm/login');
-		} 
+		}
 	}
 
 	public function siswa() {
@@ -20,7 +20,7 @@ class Import extends CI_Controller {
 
         $target_file = './upload/temp/';
         $buat_folder_temp = !is_dir($target_file) ? @mkdir("./upload/temp/") : false;
-        
+
         move_uploaded_file($_FILES["import_excel"]["tmp_name"], $target_file.$_FILES['import_excel']['name']);
 
         $file   = explode('.',$_FILES['import_excel']['name']);
@@ -30,14 +30,14 @@ class Import extends CI_Controller {
 
             $tmp    = './upload/temp/'.$_FILES['import_excel']['name'];
             //Baca dari tmp folder jadi file ga perlu jadi sampah di server :-p
-            
+
             $this->load->library('excel');//Load library excelnya
             $read   = PHPExcel_IOFactory::createReaderForFile($tmp);
             $read->setReadDataOnly(true);
             $excel  = $read->load($tmp);
-    
+
             $_sheet = $excel->setActiveSheetIndexByName('data');
-            
+
             $data = array();
             for ($j = $idx_baris_mulai; $j <= $idx_baris_selesai; $j++) {
                 $nim = $_sheet->getCell("A".$j)->getCalculatedValue();
@@ -45,14 +45,14 @@ class Import extends CI_Controller {
                 $kelas = $_sheet->getCell("C".$j)->getCalculatedValue();
 
                 if ($nim != "" || $nama != "") {
-                    $data[] = "('".$nim."', '".$nama."', '".$kelas."')"; 
+                    $data[] = "('".$nim."', '".$nama."', '".$kelas."')";
                 }
             }
 
             $strq = "INSERT INTO m_siswa (nim, nama, jurusan) VALUES ";
-           
+
             $strq .= implode(",", $data).";";
-            
+
             $this->db->query($strq);
         } else {
             exit('Bukan File Excel...');//pesan error tipe file tidak tepat
@@ -76,28 +76,28 @@ class Import extends CI_Controller {
 
             $tmp    = './upload/temp/'.$_FILES['import_excel']['name'];
             //Baca dari tmp folder jadi file ga perlu jadi sampah di server :-p
-            
+
             $this->load->library('excel');//Load library excelnya
             $read   = PHPExcel_IOFactory::createReaderForFile($tmp);
             $read->setReadDataOnly(true);
             $excel  = $read->load($tmp);
-    
+
             $_sheet = $excel->setActiveSheetIndexByName('data');
-            
+
             $data = array();
             for ($j = $idx_baris_mulai; $j <= $idx_baris_selesai; $j++) {
                 $nip = $_sheet->getCell("A".$j)->getCalculatedValue();
                 $nama = $_sheet->getCell("B".$j)->getCalculatedValue();
 
                 if ($nip != "" || $nama != "") {
-                    $data[] = "('".$nip."', '".$nama."')"; 
+                    $data[] = "('".$nip."', '".$nama."')";
                 }
             }
 
             $strq = "INSERT INTO m_guru (nip, nama) VALUES ";
-           
+
             $strq .= implode(",", $data).";";
-            
+
             $this->db->query($strq);
         } else {
             exit('Bukan File Excel...');//pesan error tipe file tidak tepat
@@ -113,7 +113,7 @@ class Import extends CI_Controller {
 
         $target_file = './upload/temp/';
         $buat_folder_temp = !is_dir($target_file) ? @mkdir("./upload/temp/") : false;
-        
+
         move_uploaded_file($_FILES["import_excel"]["tmp_name"], $target_file.$_FILES['import_excel']['name']);
 
         $file   = explode('.',$_FILES['import_excel']['name']);
@@ -123,14 +123,14 @@ class Import extends CI_Controller {
 
             $tmp    = './upload/temp/'.$_FILES['import_excel']['name'];
             //Baca dari tmp folder jadi file ga perlu jadi sampah di server :-p
-            
+
             $this->load->library('excel');//Load library excelnya
             $read   = PHPExcel_IOFactory::createReaderForFile($tmp);
             $read->setReadDataOnly(true);
             $excel  = $read->load($tmp);
-    
+
             $_sheet = $excel->setActiveSheetIndexByName('data');
-            
+
             $data = array();
             for ($j = $idx_baris_mulai; $j <= $idx_baris_selesai; $j++) {
                 $bobot = $_sheet->getCell("A".$j)->getCalculatedValue();
@@ -143,12 +143,12 @@ class Import extends CI_Controller {
                 $kunci = $_sheet->getCell("H".$j)->getCalculatedValue();
 
                 if ($soal != "") {
-                    $data[] = "('".$p['id_guru']."', '".$p['id_mapel']."', '".$bobot."', '".$soal."', '#####".$opsi_a."', '#####".$opsi_b."', '#####".$opsi_c."', '#####".$opsi_d."', '#####".$opsi_e."', '".$kunci."', NOW(), 0, 0)"; 
+                    $data[] = "('".$p['id_guru']."', '".$p['id_mapel']."', '".$bobot."', '".$soal."', '#####".$opsi_a."', '#####".$opsi_b."', '#####".$opsi_c."', '#####".$opsi_d."', '#####".$opsi_e."', '".$kunci."', NOW(), 0, 0)";
                 }
             }
 
             $strq = "INSERT INTO m_soal (id_guru, id_mapel, bobot, soal, opsi_a, opsi_b, opsi_c, opsi_d, opsi_e, jawaban, tgl_input, jml_benar, jml_salah) VALUES ";
-           
+
             $strq .= implode(",", $data).";";
             //echo $strq;
             //exit;
@@ -159,5 +159,5 @@ class Import extends CI_Controller {
         }
         redirect('adm/m_soal');
     }
-	
+
 }

@@ -1,9 +1,9 @@
 #Beberapa solusi error
 
-#tidak bisa hapus mapel, 
+#tidak bisa hapus jenis soal,
 penyebab : ada link antara tabel m_mapel dgn tabel tr_mapel_siswa (yg di versi 2 ini tidak ada, sehingga error)
 
-solusi : 
+solusi :
 1. masuk http://localhost/phpmyadmin
 2. pilih database "db_cat_dua" (sesuai setting di database.php)
 3. pilih tab "SQL"

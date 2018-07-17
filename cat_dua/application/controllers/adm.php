@@ -8,10 +8,10 @@ class Adm extends CI_Controller {
         $this->waktu_sql = $waktu_sql['waktu'];
         $this->opsi = array("a","b","c","d","e");
 	}
-	
+
 	public function get_servertime() {
-		$now = new DateTime(); 
-        $dt = $now->format("M j, Y H:i:s O"); 
+		$now = new DateTime();
+        $dt = $now->format("M j, Y H:i:s O");
 
         j($dt);
 	}
@@ -19,26 +19,26 @@ class Adm extends CI_Controller {
 	public function cek_aktif() {
 		if ($this->session->userdata('admin_valid') == false && $this->session->userdata('admin_id') == "") {
 			redirect('adm/login');
-		} 
+		}
 	}
-	
+
 	public function index() {
 		$this->cek_aktif();
-		
+
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
 		$a['sess_konid'] = $this->session->userdata('admin_konid');
-		
+
 		$a['p']			= "v_main";
-		
+
 		$this->load->view('aaa', $a);
 	}
-	
+
 	/* == ADMIN == */
 	public function m_siswa() {
 		$this->cek_aktif();
 		cek_hakakses(array("admin"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -49,13 +49,13 @@ class Adm extends CI_Controller {
 		$uri2 = $this->uri->segment(2);
 		$uri3 = $this->uri->segment(3);
 		$uri4 = $this->uri->segment(4);
-		
+
 		//var post from json
 		$p = json_decode(file_get_contents('php://input'));
 		//return as json
 		$jeson = array();
 		//$a['data'] = $this->db->query("")->result();
-		
+
 		if ($uri3 == "det") {
 			$a = $this->db->query("SELECT * FROM m_siswa WHERE id = '$uri4'")->row();
 			j($a);
@@ -69,14 +69,14 @@ class Adm extends CI_Controller {
 				$ket = "tambah";
 				$this->db->query("INSERT INTO m_siswa VALUES (null, '".bersih($p,"nama")."', '".bersih($p,"nim")."', '".bersih($p,"jurusan")."')");
 			}
-			
+
 			$ret_arr['status'] 	= "ok";
 			$ret_arr['caption']	= $ket." sukses";
 			j($ret_arr);
 			exit();
 		} else if ($uri3 == "hapus") {
 			$this->db->query("DELETE FROM m_siswa WHERE id = '".$uri4."'");
-			$this->db->query("DELETE FROM m_admin WHERE level = 'siswa' AND kon_id = '".$uri4."'");			
+			$this->db->query("DELETE FROM m_admin WHERE level = 'siswa' AND kon_id = '".$uri4."'");
 			$ret_arr['status'] 	= "ok";
 			$ret_arr['caption']	= "hapus sukses";
 			j($ret_arr);
@@ -96,7 +96,7 @@ class Adm extends CI_Controller {
 				} else {
 					$ret_arr['status'] 	= "gagal";
 					$ret_arr['caption']	= "Username telah digunakan";
-					j($ret_arr);					
+					j($ret_arr);
 				}
 			} else {
 				$ret_arr['status'] 	= "gagal";
@@ -131,9 +131,9 @@ class Adm extends CI_Controller {
 				foreach ($ambil_matkul as $a) {
 					$p_sub = "id_mapel_".$a->id;
 					if (!empty($p->$p_sub)) {
-						
+
 						$cek_sudah_ada = $this->db->query("SELECT id FROM tr_siswa_mapel WHERE  id_siswa = '".$p->id_mhs."' AND id_mapel = '".$a->id."'")->num_rows();
-						
+
 						if ($cek_sudah_ada < 1) {
 							$this->db->query("INSERT INTO tr_siswa_mapel VALUES (null, '".$p->id_mhs."', '".$a->id."')");
 						} else {
@@ -156,11 +156,11 @@ class Adm extends CI_Controller {
 	        $search = $this->input->post('search');
 
 	        $d_total_row = $this->db->query("SELECT id FROM m_siswa a WHERE a.nama LIKE '%".$search['value']."%'")->num_rows();
-	    
+
 	        $q_datanya = $this->db->query("SELECT a.*,
 											(SELECT COUNT(id) FROM m_admin WHERE level = 'siswa' AND kon_id = a.id) AS ada
 											FROM m_siswa a
-	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
+	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.nama ASC LIMIT ".$start.", ".$length."")->result_array();
 	        $data = array();
 	        $no = ($start+1);
 
@@ -198,9 +198,9 @@ class Adm extends CI_Controller {
 		} else if ($uri3 == "import") {
 			$a['p']	= "f_siswa_import";
 		} else if ($uri3 == "aktifkan_semua") {
-			$q_get_user = $this->db->query("select 
+			$q_get_user = $this->db->query("select
 								a.id, a.nama, a.nim, ifnull(b.username,'N') usernya
-								from m_siswa a 
+								from m_siswa a
 								left join m_admin b on concat(b.level,b.kon_id) = concat('siswa',a.id)")->result_array();
 			$jml_aktif = 0;
 			if (!empty($q_get_user)) {
@@ -225,7 +225,7 @@ class Adm extends CI_Controller {
 	public function m_guru() {
 		$this->cek_aktif();
 		cek_hakakses(array("admin"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -258,7 +258,7 @@ class Adm extends CI_Controller {
 				$ket = "tambah";
 				$this->db->query("INSERT INTO m_guru VALUES (null, '".bersih($p,"nip")."', '".bersih($p,"nama")."')");
 			}
-			
+
 			$ret_arr['status'] 	= "ok";
 			$ret_arr['caption']	= $ket." sukses";
 			j($ret_arr);
@@ -285,7 +285,7 @@ class Adm extends CI_Controller {
 				} else {
 					$ret_arr['status'] 	= "gagal";
 					$ret_arr['caption']	= "Username telah digunakan";
-					j($ret_arr);					
+					j($ret_arr);
 				}
 			} else {
 				$ret_arr['status'] 	= "gagal";
@@ -320,9 +320,9 @@ class Adm extends CI_Controller {
 				foreach ($ambil_matkul as $a) {
 					$p_sub = "id_mapel_".$a->id;
 					if (!empty($p->$p_sub)) {
-						
+
 						$cek_sudah_ada = $this->db->query("SELECT id FROM tr_guru_mapel WHERE  id_guru = '".$p->id_mhs."' AND id_mapel = '".$a->id."'")->num_rows();
-						
+
 						if ($cek_sudah_ada < 1) {
 							$this->db->query("INSERT INTO tr_guru_mapel VALUES (null, '".$p->id_mhs."', '".$a->id."')");
 						} else {
@@ -345,11 +345,11 @@ class Adm extends CI_Controller {
 	        $search = $this->input->post('search');
 
 	        $d_total_row = $this->db->query("SELECT id FROM m_guru a WHERE a.nama LIKE '%".$search['value']."%'")->num_rows();
-	    
+
 	        $q_datanya = $this->db->query("SELECT a.*,
 											(SELECT COUNT(id) FROM m_admin WHERE level = 'guru' AND kon_id = a.id) AS ada
 											FROM m_guru a
-	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
+	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.nama ASC LIMIT ".$start.", ".$length."")->result_array();
 	        $data = array();
 	        $no = ($start+1);
 
@@ -361,7 +361,7 @@ class Adm extends CI_Controller {
 	            $data_ok[3] = '<div class="btn-group">
                           <a href="#" onclick="return m_guru_e('.$d['id'].');" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-pencil" style="margin-left: 0px; color: #fff"></i> &nbsp;&nbsp;Edit</a>
                           <a href="#" onclick="return m_guru_h('.$d['id'].');" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove" style="margin-left: 0px; color: #fff"></i> &nbsp;&nbsp;Hapus</a>
-                          <a href="#" onclick="return m_guru_matkul('.$d['id'].');" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-th-list" style="margin-left: 0px; color: #fff"></i> &nbsp;&nbsp;MaPel Diampu</a>
+                          <a href="#" onclick="return m_guru_matkul('.$d['id'].');" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-th-list" style="margin-left: 0px; color: #fff"></i> &nbsp;&nbsp;Jenis Soal</a>
                          ';
 
                 if ($d['ada'] == "0") {
@@ -384,9 +384,9 @@ class Adm extends CI_Controller {
 		} else if ($uri3 == "import") {
 			$a['p']	= "f_guru_import";
 		} else if ($uri3 == "aktifkan_semua") {
-			$q_get_user = $this->db->query("select 
+			$q_get_user = $this->db->query("select
 								a.id, a.nama, a.nip, ifnull(b.username,'N') usernya
-								from m_guru a 
+								from m_guru a
 								left join m_admin b on concat(b.level,b.kon_id) = concat('guru',a.id)")->result_array();
 			$jml_aktif = 0;
 			if (!empty($q_get_user)) {
@@ -411,7 +411,7 @@ class Adm extends CI_Controller {
 	public function m_mapel() {
 		$this->cek_aktif();
 		cek_hakakses(array("admin"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -440,7 +440,7 @@ class Adm extends CI_Controller {
 				$ket = "tambah";
 				$this->db->query("INSERT INTO m_mapel VALUES (null, '".bersih($p,"nama")."')");
 			}
-			
+
 			$ret_arr['status'] 	= "ok";
 			$ret_arr['caption']	= $ket." sukses";
 			j($ret_arr);
@@ -458,10 +458,10 @@ class Adm extends CI_Controller {
 	        $search = $this->input->post('search');
 
 	        $d_total_row = $this->db->query("SELECT id FROM m_mapel a WHERE a.nama LIKE '%".$search['value']."%'")->num_rows();
-	    
+
 	        $q_datanya = $this->db->query("SELECT a.*
 											FROM m_mapel a
-	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
+	                                        WHERE a.nama LIKE '%".$search['value']."%' ORDER BY a.nama ASC LIMIT ".$start.", ".$length."")->result_array();
 	        $data = array();
 	        $no = ($start+1);
 
@@ -514,14 +514,14 @@ class Adm extends CI_Controller {
 
 		if ($a['sess_level'] == "guru") {
 			$a['p_guru'] = obj_to_array($this->db->query("SELECT * FROM m_guru WHERE id = '".$a['sess_konid']."'")->result(), "id,nama");
-			$a['p_mapel'] = obj_to_array($this->db->query("SELECT 
+			$a['p_mapel'] = obj_to_array($this->db->query("SELECT
 											b.id, b.nama
 											FROM tr_guru_mapel a
 											INNER JOIN m_mapel b ON a.id_mapel = b.id
 											WHERE a.id_guru = '".$a['sess_konid']."'")->result(), "id,nama");
 		} else {
 			$a['p_guru'] = obj_to_array($this->db->query("SELECT * FROM m_guru")->result(), "id,nama");
-			$a['p_mapel'] = obj_to_array($this->db->query("SELECT 
+			$a['p_mapel'] = obj_to_array($this->db->query("SELECT
 											b.id, b.nama
 											FROM tr_guru_mapel a
 											INNER JOIN m_mapel b ON a.id_mapel = b.id")->result(), "id,nama");
@@ -557,7 +557,7 @@ class Adm extends CI_Controller {
 			$buat_folder_gb_soal = !is_dir($folder_gb_soal) ? @mkdir("./upload/gambar_soal/") : false;
 			$buat_folder_gb_opsi = !is_dir($folder_gb_opsi) ? @mkdir("./upload/gambar_opsi/") : false;
 
-			$allowed_type 	= array("image/jpeg", "image/png", "image/gif", 
+			$allowed_type 	= array("image/jpeg", "image/png", "image/gif",
 			"audio/mpeg", "audio/mpg", "audio/mpeg3", "audio/mp3", "audio/x-wav", "audio/wave", "audio/wav",
 			"video/mp4", "application/octet-stream");
 
@@ -600,7 +600,7 @@ class Adm extends CI_Controller {
 				$file_size		= $_FILES[$k]['size'];
 				//kode ref file upload jika error
 				$kode_file_error = array("File berhasil diupload", "Ukuran file terlalu besar", "Ukuran file terlalu besar", "File upload error", "Tidak ada file yang diupload", "File upload error");
-				
+
 				//jika file error = 0 / tidak ada, tipe file ada di file yang diperbolehkan, dan nama file != kosong
 				//echo $file_error."<br>".$file_type;
 				//exit;
@@ -617,7 +617,7 @@ class Adm extends CI_Controller {
 				} else if ($file_name == "") {
 					$gagal[$k] = "Tidak ada file yang diupload";
 					$nama_file[$k]	= "";
-					$tipe_file[$k]	= "";					
+					$tipe_file[$k]	= "";
 				} else {
 					$ekstensi = explode(".", $file_name);
 
@@ -669,11 +669,11 @@ class Adm extends CI_Controller {
 				$teks_gagal .= $arr_nama_file_upload[$k].': '.$v.'<br>';
 			}
 			$this->session->set_flashdata('k', '<div class="alert alert-info">'.$teks_gagal.'</div>');
-			
+
 			redirect('adm/m_soal/pilih_mapel/'.$p['id_mapel']);
 		} else if ($uri3 == "edit") {
 			$a['opsij'] = array(""=>"Jawaban","A"=>"A","B"=>"B","C"=>"C","D"=>"D","E"=>"E");
-			
+
 			$id_guru = $this->session->userdata('admin_level') == "guru" ? "WHERE a.id_guru = '".$a['sess_konid']."'" : "";
 
 			$a['p_mapel'] = obj_to_array($this->db->query("SELECT b.id, b.nama FROM tr_guru_mapel a INNER JOIN m_mapel b ON a.id_mapel = b.id $id_guru")->result(),"id,nama");
@@ -716,7 +716,7 @@ class Adm extends CI_Controller {
 			@unlink("./upload/gambar_soal/".$pc_opsi_c[0]);
 			@unlink("./upload/gambar_soal/".$pc_opsi_d[0]);
 			@unlink("./upload/gambar_soal/".$pc_opsi_e[0]);
-			
+
 			redirect('adm/m_soal/pilih_mapel/'.$nama_gambar->id_mapel);
 		} else if ($uri3 == "cetak") {
 			$html = "<link href='".base_url()."___/css/style_print.css' rel='stylesheet' media='' type='text/css'/>";
@@ -728,11 +728,11 @@ class Adm extends CI_Controller {
 
 			$mapel = $this->db->query("SELECT nama FROM m_mapel WHERE id = '".$uri4."'")->row();
 			if (!empty($data)) {
-				
+
 				$no = 1;
 				$jawaban = array("A","B","C","D","E");
 				foreach ($data as $d) {
-					
+
 		            $arr_tipe_media = array(""=>"none","image/jpeg"=>"gambar","image/png"=>"gambar","image/gif"=>"gambar",
 					"audio/mpeg"=>"audio","audio/mpg"=>"audio","audio/mpeg3"=>"audio","audio/mp3"=>"audio","audio/x-wav"=>"audio","audio/wave"=>"audio","audio/wav"=>"audio",
 					"video/mp4"=>"video", "application/octet-stream"=>"video");
@@ -786,20 +786,20 @@ class Adm extends CI_Controller {
 												FROM m_soal a
 												INNER JOIN m_guru b ON a.id_guru = b.id
 												INNER JOIN m_mapel c ON a.id_mapel = c.id
-		                                        WHERE ".$wh." (a.soal LIKE '%".$search['value']."%' 
-												OR b.nama LIKE '%".$search['value']."%' 
+		                                        WHERE ".$wh." (a.soal LIKE '%".$search['value']."%'
+												OR b.nama LIKE '%".$search['value']."%'
 												OR c.nama LIKE '%".$search['value']."%')")->num_rows();
 
 		        $q_datanya = $this->db->query("SELECT a.*, b.nama nmguru, c.nama nmmapel
 												FROM m_soal a
 												INNER JOIN m_guru b ON a.id_guru = b.id
 												INNER JOIN m_mapel c ON a.id_mapel = c.id
-		                                        WHERE ".$wh." (a.soal LIKE '%".$search['value']."%' 
-												OR b.nama LIKE '%".$search['value']."%' 
+		                                        WHERE ".$wh." (a.soal LIKE '%".$search['value']."%'
+												OR b.nama LIKE '%".$search['value']."%'
 												OR c.nama LIKE '%".$search['value']."%')
-		                                        ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
+		                                        ORDER BY c.nama ASC LIMIT ".$start.", ".$length."")->result_array();
 		        //echo $this->db->last_query();
-		    
+
 		        $data = array();
 		        $no = ($start+1);
 
@@ -807,7 +807,7 @@ class Adm extends CI_Controller {
 		            	$jml_benar = empty($d['jml_benar']) ? 0 : intval($d['jml_benar']);
 		        	$jml_salah = empty($d['jml_salah']) ? 0 : intval($d['jml_salah']);
 		        	$total = ($jml_benar + $jml_salah);
-		        	$persen_benar = $total > 0 ? (($jml_benar / $total) * 100) : 0; 
+		        	$persen_benar = $total > 0 ? (($jml_benar / $total) * 100) : 0;
 
 				$data_ok = array();
 				$data_ok[0] = $no++;
@@ -839,7 +839,7 @@ class Adm extends CI_Controller {
 		$this->cek_aktif();
 		cek_hakakses(array("guru","admin"), $this->session->userdata('admin_level'));
 
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -853,18 +853,18 @@ class Adm extends CI_Controller {
 		$p = json_decode(file_get_contents('php://input'));
 		//return as json
 		$jeson = array();
-		
+
 		//$a['data'] = $this->db->query("SELECT tr_guru_tes.*, m_mapel.nama AS mapel FROM tr_guru_tes INNER JOIN m_mapel ON tr_guru_tes.id_mapel = m_mapel.id WHERE tr_guru_tes.id_guru = '".$a['sess_konid']."'")->result();
 
 		$a['pola_tes'] = array(""=>"Pengacakan Soal", "acak"=>"Soal Diacak", "set"=>"Soal Diurutkan");
 
 		$a['p_mapel'] = obj_to_array($this->db->query("SELECT * FROM m_mapel WHERE id IN (SELECT id_mapel FROM tr_guru_mapel WHERE id_guru = '".$a['sess_konid']."')")->result(), "id,nama");
-		
+
 		if ($uri3 == "det") {
 			$are = array();
 
 			$a = $this->db->query("SELECT * FROM tr_guru_tes WHERE id = '$uri4'")->row();
-			
+
 			if (!empty($a)) {
 				$pc_waktu = explode(" ", $a->tgl_mulai);
 				$pc_tgl = explode("-", $pc_waktu[0]);
@@ -909,19 +909,19 @@ class Adm extends CI_Controller {
 
 
 			$jml_soal_diminta = intval(bersih($p, "jumlah_soal"));
-			
+
 			if ($ambil_data < $jml_soal_diminta) {
 				$ret_arr['status'] 	= "gagal";
 				$ret_arr['caption']	= "Jumlah soal diinput, melebihi jumlah soal yang ada: ".$ambil_data;
 			} else {
 				if ($p->id != 0) {
-					$this->db->query("UPDATE tr_guru_tes SET 
-						id_mapel = '".bersih($p,"mapel")."', 
-						nama_ujian = '".bersih($p,"nama_ujian")."', 
-						jumlah_soal = '".bersih($p,"jumlah_soal")."', 
-						waktu = '".bersih($p,"waktu")."', 
-						terlambat = '".bersih($p,"terlambat")." ".bersih($p,"terlambat2")."', 
-						tgl_mulai = '".bersih($p,"tgl_mulai")." ".bersih($p,"wkt_mulai")."', 
+					$this->db->query("UPDATE tr_guru_tes SET
+						id_mapel = '".bersih($p,"mapel")."',
+						nama_ujian = '".bersih($p,"nama_ujian")."',
+						jumlah_soal = '".bersih($p,"jumlah_soal")."',
+						waktu = '".bersih($p,"waktu")."',
+						terlambat = '".bersih($p,"terlambat")." ".bersih($p,"terlambat2")."',
+						tgl_mulai = '".bersih($p,"tgl_mulai")." ".bersih($p,"wkt_mulai")."',
 						jenis = '".bersih($p,"acak")."'
 						WHERE id = '".bersih($p,"id")."'");
 					$ket = "edit";
@@ -930,16 +930,16 @@ class Adm extends CI_Controller {
 					$token = strtoupper(random_string('alpha', 5));
 
 					$this->db->query("INSERT INTO tr_guru_tes VALUES (
-						null, 
-						'".$a['sess_konid']."', 
+						null,
+						'".$a['sess_konid']."',
 						'".bersih($p,"mapel")."',
-						'".bersih($p,"nama_ujian")."', 
-						'".bersih($p,"jumlah_soal")."', 
-						'".bersih($p,"waktu")."', 
-						'".bersih($p,"acak")."', 
-						'', 
-						'".bersih($p,"tgl_mulai")." ".bersih($p,"wkt_mulai")."', 
-						'".bersih($p,"terlambat")." ".bersih($p,"terlambat2")."', 
+						'".bersih($p,"nama_ujian")."',
+						'".bersih($p,"jumlah_soal")."',
+						'".bersih($p,"waktu")."',
+						'".bersih($p,"acak")."',
+						'',
+						'".bersih($p,"tgl_mulai")." ".bersih($p,"wkt_mulai")."',
+						'".bersih($p,"terlambat")." ".bersih($p,"terlambat2")."',
 						'$token')");
 				}
 
@@ -963,26 +963,26 @@ class Adm extends CI_Controller {
 
 		        $d_total_row = $this->db->query("SELECT a.id
 		        	FROM tr_guru_tes a
-		        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
-		        	WHERE a.id_guru = '".$a['sess_konid']."' 
-                    AND (a.nama_ujian LIKE '%".$search['value']."%' 
+		        	INNER JOIN m_mapel b ON a.id_mapel = b.id
+		        	WHERE a.id_guru = '".$a['sess_konid']."'
+                    AND (a.nama_ujian LIKE '%".$search['value']."%'
 					OR b.nama LIKE '%".$search['value']."%')")->num_rows();
-		    	
+
 		    	//echo $this->db->last_query();
 
 		        $q_datanya = $this->db->query("SELECT a.*, b.nama AS mapel
 												FROM tr_guru_tes a
-									        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
+									        	INNER JOIN m_mapel b ON a.id_mapel = b.id
 									        	WHERE a.id_guru = '".$a['sess_konid']."'
 							                    AND (a.nama_ujian LIKE '%".$search['value']."%'
-												OR b.nama LIKE '%".$search['value']."%') 
+												OR b.nama LIKE '%".$search['value']."%')
 		                                        ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
 		        $data = array();
 		        $no = ($start+1);
 
 		        foreach ($q_datanya as $d) {
 		        	$jenis_soal = $d['jenis'] == "acak" ? "Soal diacak" : "Soal urut";
-                
+
 		            $data_ok = array();
 		            $data_ok[0] = $no++;
 		            $data_ok[1] = $d['nama_ujian']."<br>Token : <b>".$d['token']."</b> &nbsp;&nbsp; <a href='#' onclick='return refresh_token(".$d['id'].")' title='Perbarui Token'><i class='fa fa-refresh'></i></a>";
@@ -1024,7 +1024,7 @@ class Adm extends CI_Controller {
 	public function h_ujian() {
 		$this->cek_aktif();
 		cek_hakakses(array("guru","admin"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -1042,18 +1042,18 @@ class Adm extends CI_Controller {
 
 		$wh_1 = $a['sess_level'] == "admin" ? "" : " AND a.id_guru = '".$a['sess_konid']."'";
 		//$a['data'] = $this->db->query($wh_1)->result();
-		
+
 
 		$a['p_mapel'] = obj_to_array($this->db->query("SELECT * FROM m_mapel")->result(), "id,nama");
-		
+
 		if ($uri3 == "det") {
-			$a['detil_tes'] = $this->db->query("SELECT m_mapel.nama AS namaMapel, m_guru.nama AS nama_guru, 
-												tr_guru_tes.* 
-												FROM tr_guru_tes 
+			$a['detil_tes'] = $this->db->query("SELECT m_mapel.nama AS namaMapel, m_guru.nama AS nama_guru,
+												tr_guru_tes.*
+												FROM tr_guru_tes
 												INNER JOIN m_mapel ON tr_guru_tes.id_mapel = m_mapel.id
 												INNER JOIN m_guru ON tr_guru_tes.id_guru = m_guru.id
 												WHERE tr_guru_tes.id = '$uri4'")->row();
-			$a['statistik'] = $this->db->query("SELECT MAX(nilai) AS max_, MIN(nilai) AS min_, AVG(nilai) AS avg_ 
+			$a['statistik'] = $this->db->query("SELECT MAX(nilai) AS max_, MIN(nilai) AS min_, AVG(nilai) AS avg_
 											FROM tr_ikut_ujian
 											WHERE tr_ikut_ujian.id_tes = '$uri4'")->row();
 
@@ -1070,14 +1070,14 @@ class Adm extends CI_Controller {
 	        	SELECT a.id
 				FROM tr_ikut_ujian a
 				INNER JOIN m_siswa b ON a.id_user = b.id
-				WHERE a.id_tes = '$uri4' 
+				WHERE a.id_tes = '$uri4'
 				AND b.nama LIKE '%".$search['value']."%'")->num_rows();
 
 	        $q_datanya = $this->db->query("
 	        	SELECT a.id, b.nama, a.nilai, a.jml_benar, a.nilai_bobot
 				FROM tr_ikut_ujian a
 				INNER JOIN m_siswa b ON a.id_user = b.id
-				WHERE a.id_tes = '$uri4' 
+				WHERE a.id_tes = '$uri4'
 				AND b.nama LIKE '%".$search['value']."%' ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
 
 	        $data = array();
@@ -1114,13 +1114,13 @@ class Adm extends CI_Controller {
 	        $search = $this->input->post('search');
 
 	        $d_total_row = $this->db->query("SELECT a.id FROM tr_guru_tes a
-	        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
+	        	INNER JOIN m_mapel b ON a.id_mapel = b.id
 	        	INNER JOIN m_guru c ON a.id_guru = c.id
 	            WHERE (a.nama_ujian LIKE '%".$search['value']."%' OR b.nama LIKE '%".$search['value']."%' OR c.nama LIKE '%".$search['value']."%') ".$wh_1."")->num_rows();
 	    	//echo $this->db->last_query();
 
 	        $q_datanya = $this->db->query("SELECT a.*, b.nama AS mapel, c.nama AS nama_guru FROM tr_guru_tes a
-	        	INNER JOIN m_mapel b ON a.id_mapel = b.id 
+	        	INNER JOIN m_mapel b ON a.id_mapel = b.id
 	        	INNER JOIN m_guru c ON a.id_guru = c.id
 	            WHERE (a.nama_ujian LIKE '%".$search['value']."%' OR b.nama LIKE '%".$search['value']."%' OR c.nama LIKE '%".$search['value']."%') ".$wh_1." ORDER BY a.id DESC LIMIT ".$start.", ".$length."")->result_array();
 
@@ -1159,19 +1159,19 @@ class Adm extends CI_Controller {
 	}
 	public function hasil_ujian_cetak() {
 		$this->cek_aktif();
-		
+
 		//var def uri segment
 		$uri2 = $this->uri->segment(2);
 		$uri3 = $this->uri->segment(3);
 		$uri4 = $this->uri->segment(4);
-		$a['detil_tes'] = $this->db->query("SELECT m_mapel.nama AS namaMapel, m_guru.nama AS nama_guru, 
-												tr_guru_tes.* 
-												FROM tr_guru_tes 
+		$a['detil_tes'] = $this->db->query("SELECT m_mapel.nama AS namaMapel, m_guru.nama AS nama_guru,
+												tr_guru_tes.*
+												FROM tr_guru_tes
 												INNER JOIN m_mapel ON tr_guru_tes.id_mapel = m_mapel.id
 												INNER JOIN m_guru ON tr_guru_tes.id_guru = m_guru.id
 												WHERE tr_guru_tes.id = '$uri3'")->row();
-		
-		$a['statistik'] = $this->db->query("SELECT MAX(nilai) AS max_, MIN(nilai) AS min_, AVG(nilai) AS avg_ 
+
+		$a['statistik'] = $this->db->query("SELECT MAX(nilai) AS max_, MIN(nilai) AS min_, AVG(nilai) AS avg_
 										FROM tr_ikut_ujian
 										WHERE tr_ikut_ujian.id_tes = '$uri3'")->row();
 		$a['hasil'] = $this->db->query("SELECT m_siswa.nama, tr_ikut_ujian.nilai, tr_ikut_ujian.jml_benar, tr_ikut_ujian.nilai_bobot
@@ -1184,7 +1184,7 @@ class Adm extends CI_Controller {
 	public function ikuti_ujian() {
 		$this->cek_aktif();
 		cek_hakakses(array("siswa"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -1199,13 +1199,13 @@ class Adm extends CI_Controller {
 		//return as json
 		$jeson = array();
 		//$a['sess_konid']
-		$a['data'] = $this->db->query("SELECT 
+		$a['data'] = $this->db->query("SELECT
 									a.id, a.nama_ujian, a.jumlah_soal, a.waktu,
 									b.nama nmmapel,
 									c.nama nmguru,
 									IF((d.status='Y' AND NOW() BETWEEN d.tgl_mulai AND d.tgl_selesai),'Sedang Tes',
 									IF(d.status='Y' AND NOW() NOT BETWEEN d.tgl_mulai AND d.tgl_selesai,'Waktu Habis',
-									IF(d.status='N','Selesai','Belum Ikut'))) status 
+									IF(d.status='N','Selesai','Belum Ikut'))) status
 									FROM tr_guru_tes a
 									INNER JOIN m_mapel b ON a.id_mapel = b.id
 									INNER JOIN m_guru c ON a.id_guru = c.id
@@ -1218,7 +1218,7 @@ class Adm extends CI_Controller {
 	public function ikut_ujian() {
 		$this->cek_aktif();
 		cek_hakakses(array("siswa"), $this->session->userdata('admin_level'));
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -1233,7 +1233,7 @@ class Adm extends CI_Controller {
 		$a['detil_user'] = $this->db->query("SELECT * FROM m_siswa WHERE id = '".$a['sess_konid']."'")->row();
 		if ($uri3 == "simpan_satu") {
 			$p			= json_decode(file_get_contents('php://input'));
-			
+
 			$update_ 	= "";
 			for ($i = 1; $i < $p->jml_soal; $i++) {
 				$_tjawab 	= "opsi_".$i;
@@ -1247,7 +1247,7 @@ class Adm extends CI_Controller {
 			//echo $this->db->last_query();
 
 			$q_ret_urn 	= $this->db->query("SELECT list_jawaban FROM tr_ikut_ujian WHERE id_tes = '$uri4' AND id_user = '".$a['sess_konid']."'");
-			
+
 			$d_ret_urn 	= $q_ret_urn->row_array();
 			$ret_urn 	= explode(",", $d_ret_urn['list_jawaban']);
 			$hasil 		= array();
@@ -1262,7 +1262,7 @@ class Adm extends CI_Controller {
 			$d['status'] = "ok";
 
 			j($d);
-			exit;		
+			exit;
 
 		} else if ($uri3 == "simpan_akhir") {
 			$id_tes = abs($uri4);
@@ -1285,9 +1285,9 @@ class Adm extends CI_Controller {
 
 				$cek_jwb 	= $this->db->query("SELECT bobot, jawaban FROM m_soal WHERE id = '".$id_soal."'")->row();
 				$total_bobot = $total_bobot + $cek_jwb->bobot;
-				
+
 				if (($cek_jwb->jawaban == $jawaban)) {
-					//jika jawaban benar 
+					//jika jawaban benar
 					$jumlah_benar++;
 					$nilai_bobot = $nilai_bobot + $cek_jwb->bobot;
 					$q_update_jwb = "UPDATE m_soal SET jml_benar = jml_benar + 1 WHERE id = '".$id_soal."'";
@@ -1305,9 +1305,9 @@ class Adm extends CI_Controller {
 			$this->db->query("UPDATE tr_ikut_ujian SET jml_benar = ".$jumlah_benar.", nilai = ".$nilai.", nilai_bobot = ".$nilai_bobot.", status = 'N' WHERE id_tes = '$id_tes' AND id_user = '".$a['sess_konid']."'");
 			$a['status'] = "ok";
 			j($a);
-			exit;		
+			exit;
 		} else if ($uri3 == "token") {
-			$a['du'] = $this->db->query("SELECT a.id, a.tgl_mulai, a.terlambat, 
+			$a['du'] = $this->db->query("SELECT a.id, a.tgl_mulai, a.terlambat,
 										a.token, a.nama_ujian, a.jumlah_soal, a.waktu,
 										b.nama nmguru, c.nama nmmapel,
 										(case
@@ -1315,9 +1315,9 @@ class Adm extends CI_Controller {
 											when (now() >= a.tgl_mulai and now() <= a.terlambat) then 1
 											else 2
 										end) statuse
-										FROM tr_guru_tes a 
+										FROM tr_guru_tes a
 										INNER JOIN m_guru b ON a.id_guru = b.id
-										INNER JOIN m_mapel c ON a.id_mapel = c.id 
+										INNER JOIN m_mapel c ON a.id_mapel = c.id
 										WHERE a.id = '$uri4'")->row_array();
 
 			$a['dp'] = $this->db->query("SELECT * FROM m_siswa WHERE id = '".$a['sess_konid']."'")->row_array();
@@ -1328,7 +1328,7 @@ class Adm extends CI_Controller {
 			    //$tgl_selesai2 = strtotime($tgl_selesai);
 			    //$tgl_baru = date('F j, Y H:i:s', $tgl_selesai);
 
-			    //$tgl_terlambat = strtotime("+".$a['du']['terlambat']." minutes", $tgl_selesai2);	
+			    //$tgl_terlambat = strtotime("+".$a['du']['terlambat']." minutes", $tgl_selesai2);
 				$tgl_terlambat_baru = $a['du']['terlambat'];
 
 				$a['tgl_mulai'] = $tgl_selesai;
@@ -1341,7 +1341,7 @@ class Adm extends CI_Controller {
 			}
 		} else {
 			$cek_sdh_selesai= $this->db->query("SELECT id FROM tr_ikut_ujian WHERE id_tes = '$uri4' AND id_user = '".$a['sess_konid']."' AND status = 'N'")->num_rows();
-			
+
 			//sekalian validasi waktu sudah berlalu...
 			if ($cek_sdh_selesai < 1) {
 				//ini jika ujian belum tercatat, belum ikut
@@ -1352,7 +1352,7 @@ class Adm extends CI_Controller {
 				$cek_sdh_ujian	= $q_cek_sdh_ujian->num_rows();
 				$acakan = $cek_detil_tes->jenis == "acak" ? "ORDER BY RAND()" : "ORDER BY id ASC";
 
-				if ($cek_sdh_ujian < 1)	{		
+				if ($cek_sdh_ujian < 1)	{
 					$soal_urut_ok = array();
 					$q_soal			= $this->db->query("SELECT id, file, tipe_file, soal, opsi_a, opsi_b, opsi_c, opsi_d, opsi_e, '' AS jawaban FROM m_soal WHERE id_mapel = '".$cek_detil_tes->id_mapel."' AND id_guru = '".$cek_detil_tes->id_guru."' ".$acakan." LIMIT ".$cek_detil_tes->jumlah_soal)->result();
 					$i = 0;
@@ -1385,7 +1385,7 @@ class Adm extends CI_Controller {
 					$waktu_selesai = tambah_jam_sql($cek_detil_tes->waktu);
 					$time_mulai		= date('Y-m-d H:i:s');
 					$this->db->query("INSERT INTO tr_ikut_ujian VALUES (null, '$uri4', '".$a['sess_konid']."', '$list_id_soal', '$list_jw_soal', 0, 0, 0, '$time_mulai', ADDTIME('$time_mulai', '$waktu_selesai'), 'Y')");
-					
+
 					$detil_tes = $this->db->query("SELECT * FROM tr_ikut_ujian WHERE id_tes = '$uri4' AND id_user = '".$a['sess_konid']."'")->row();
 
 					$soal_urut_ok= $soal_urut_ok;
@@ -1398,9 +1398,9 @@ class Adm extends CI_Controller {
 						$pc_urut_soal = explode(":",$urut_soal[$i]);
 						$pc_urut_soal1 = empty($pc_urut_soal[1]) ? "''" : "'".$pc_urut_soal[1]."'";
 						$ambil_soal = $this->db->query("SELECT *, $pc_urut_soal1 AS jawaban FROM m_soal WHERE id = '".$pc_urut_soal[0]."'")->row();
-						$soal_urut_ok[] = $ambil_soal; 
+						$soal_urut_ok[] = $ambil_soal;
 					}
-					
+
 					$detil_tes = $q_ambil_soal;
 
 					$soal_urut_ok = $soal_urut_ok;
@@ -1421,7 +1421,7 @@ class Adm extends CI_Controller {
 				$html = '';
 				$no = 1;
 				if (!empty($soal_urut_ok)) {
-				    foreach ($soal_urut_ok as $d) { 
+				    foreach ($soal_urut_ok as $d) {
 				        $tampil_media = tampil_media("./upload/gambar_soal/".$d->file, 'auto','auto');
 				        $vrg = $arr_jawab[$d->id]["r"] == "" ? "N" : $arr_jawab[$d->id]["r"];
 
@@ -1463,15 +1463,15 @@ class Adm extends CI_Controller {
 	}
 	public function jvs() {
 		$this->cek_aktif();
-		
+
 		$data_soal 		= $this->db->query("SELECT id, gambar, soal, opsi_a, opsi_b, opsi_c, opsi_d, opsi_e FROM m_soal ORDER BY RAND()")->result();
-		
+
 		j($data_soal);
 		exit;
 	}
 	public function rubah_password() {
 		$this->cek_aktif();
-		
+
 		//var def session
 		$a['sess_admin_id'] = $this->session->userdata('admin_id');
 		$a['sess_level'] = $this->session->userdata('admin_level');
@@ -1514,7 +1514,7 @@ class Adm extends CI_Controller {
 	}
 	public function sudah_selesai_ujian() {
 		$this->cek_aktif();
-		
+
 		//var def session
 		$a['sess_level'] = $this->session->userdata('admin_level');
 		$a['sess_user'] = $this->session->userdata('admin_user');
@@ -1524,18 +1524,18 @@ class Adm extends CI_Controller {
 		$uri2 = $this->uri->segment(2);
 		$uri3 = $this->uri->segment(3);
 		$uri4 = $this->uri->segment(4);
-		
+
 		$q_nilai = $this->db->query("SELECT nilai, tgl_selesai FROM tr_ikut_ujian WHERE id_tes = $uri3 AND id_user = '".$a['sess_konid']."' AND status = 'N'")->row();
 		if (empty($q_nilai)) {
 			redirect('adm/ikut_ujian/_/'.$uri3);
 		} else {
-			
+
 			$a['p'] = "v_selesai_ujian";
-			
+
 			if ($this->config->item('tampil_nilai')) {
 				$a['data'] = "<div class='alert alert-danger'>Anda telah selesai mengikuti ujian ini pada : <strong style='font-size: 16px'>".tjs($q_nilai->tgl_selesai, "l")."</strong>, dan mendapatkan nilai : <strong style='font-size: 16px'>".$q_nilai->nilai."</strong></div>";
 			} else {
-				$a['data'] = "<div class='alert alert-danger'>Anda telah selesai mengikuti ujian ini pada : <strong style='font-size: 16px'>".tjs($q_nilai->tgl_selesai, "l")."</strong>. Nilai akan diumumkan oleh Guru yang bersangkutan.</div>";
+				$a['data'] = "<div class='alert alert-danger'>Anda telah selesai mengikuti ujian ini pada : <strong style='font-size: 16px'>".tjs($q_nilai->tgl_selesai, "l")."</strong>. Nilai akan diumumkan oleh Pemateri yang bersangkutan.</div>";
 			}
 		}
 		$this->load->view('aaa', $a);
@@ -1544,18 +1544,18 @@ class Adm extends CI_Controller {
 	public function login() {
 		$this->load->view('aaa_login');
 	}
-	
+
 	public function act_login() {
-		
+
 		$username	= $this->input->post('username');
 		$password	= $this->input->post('password');
-		
+
 		$password2	= md5($password);
-		
+
 		$q_data		= $this->db->query("SELECT * FROM m_admin WHERE username = '".$username."' AND password = '$password2'");
 		$j_data		= $q_data->num_rows();
 		$a_data		= $q_data->row();
-		
+
 		$_log		= array();
 		if ($j_data === 1) {
 			$sess_nama_user = "";
@@ -1589,10 +1589,10 @@ class Adm extends CI_Controller {
 			$_log['log']['keterangan']		= "Maaf, username dan password tidak ditemukan";
 			$_log['log']['detil_admin']		= null;
 		}
-		
+
 		j($_log);
 	}
-	
+
 	public function logout() {
 		$data = array(
                     'admin_id' 		=> "",
@@ -1610,11 +1610,11 @@ class Adm extends CI_Controller {
 		$get_akhir	= $this->db->query("SELECT MAX($field) AS max FROM $tabel LIMIT 1")->row();
 		$data		= (intval($get_akhir->max)) + 1;
 		$last		= $kode_awal.str_pad($data, $pad, '0', STR_PAD_LEFT);
-	
+
 		return $last;
 	}
-	
-	
+
+
 }
 /* End of file welcome.php */
 /* Location: ./application/controllers/welcome.php */
