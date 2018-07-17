@@ -7,12 +7,12 @@ $uri_js = count($pc_root) - 2;
 
 
 $config['jml_opsi']			= 4;			//isi dengan pilihan opsi jawaban, HARUS <= 5
-$config['uri_js']			= $uri_js;		
+$config['uri_js']			= $uri_js;
 $config['editor_style']		= "replace";	//pilihannya "inline" atau "replace";
 $config['nama_aplikasi']	= "CAT - Computer Assisted Test";
 $config['versi']			= "2.0";
 $config['tgl']				= "27012017";
-$config['tampil_nilai']		= TRUE; // jika siswa boleh melihat hasil ujian, isikan TRUE, jika tidak FALSE, default TRUE
+$config['tampil_nilai']		= TRUE; // jika peserta boleh melihat hasil ujian, isikan TRUE, jika tidak FALSE, default TRUE
 
 
 
@@ -63,7 +63,7 @@ $config['allow_get_array']		= TRUE;
 $config['enable_query_strings'] = FALSE;
 $config['controller_trigger']	= 'c';
 $config['function_trigger']		= 'm';
-$config['directory_trigger']	= 'd'; 
+$config['directory_trigger']	= 'd';
 $config['log_threshold'] = 0;
 $config['log_date_format'] = 'Y-m-d H:i:s';
 $config['cache_path'] = '';

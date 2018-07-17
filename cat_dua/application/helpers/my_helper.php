@@ -4,7 +4,7 @@
 function tjs ($tgl, $tipe) {
 	if ($tgl != "0000-00-00 00:00:00") {
 		$pc_satu	= explode(" ", $tgl);
-		if (count($pc_satu) < 2) {	
+		if (count($pc_satu) < 2) {
 			$tgl1		= $pc_satu[0];
 			$jam1		= "";
 		} else {
@@ -82,12 +82,12 @@ function tambah_jam_sql($menit) {
 		$mod = $menit % 60;
 		$bg = floor($menit / 60);
 		$str = str_pad($bg, 2, "0", STR_PAD_LEFT).":".str_pad($mod, 2, "0", STR_PAD_LEFT).":00";
-	} 
+	}
 	return $str;
 }
 
 function bersih($data, $pil) {
-	//return mysql_real_escape_string 
+	//return mysql_real_escape_string
 	return $data->$pil;
 }
 
@@ -101,7 +101,7 @@ function obj_to_array($obj, $pilih) {
 		$x = $o->$xx;
 		$y = $pilihpc[1];
 
-		$array[$x] = $o->$y; 
+		$array[$x] = $o->$y;
 	}
 
 	return $array;
@@ -130,7 +130,7 @@ function tampil_media($file,$width="320px",$height="240px") {
 			} else {
 				$ret .= '';
 			}
-		} 
+		}
 
 		if (in_array($eks, $eks_audio)) {
 			if (is_file("./".$file)) {
@@ -150,7 +150,7 @@ function tampil_media($file,$width="320px",$height="240px") {
 			}
 		}
 	}
-	
+
 
 	return $ret;
 }
@@ -183,10 +183,10 @@ function gen_menu() {
 	} else if ($sess_level == "admin") {
 	  $menu = array(
 	            array("icon"=>"dashboard", "url"=>"", "text"=>"Dashboard"),
-	            array("icon"=>"list-alt", "url"=>"m_siswa", "text"=>"Data Siswa"),
-	            array("icon"=>"list-alt", "url"=>"m_guru", "text"=>"Data Guru/Dosen"),
-	            array("icon"=>"list-alt", "url"=>"m_mapel", "text"=>"Data Mapel"),
-	            array("icon"=>"list-alt", "url"=>"m_soal", "text"=>"Soal"),
+	            array("icon"=>"list-alt", "url"=>"m_siswa", "text"=>"Data Peserta"),
+	            array("icon"=>"list-alt", "url"=>"m_guru", "text"=>"Data Pemateri"),
+	            array("icon"=>"list-alt", "url"=>"m_mapel", "text"=>"Jenis Soal"),
+	            array("icon"=>"list-alt", "url"=>"m_soal", "text"=>"Data Soal"),
 	            array("icon"=>"file", "url"=>"h_ujian", "text"=>"Hasil Ujian"),
 	          );
 	} else {
@@ -199,7 +199,7 @@ function gen_menu() {
 	}
 
 
-	
+
 	if ($menu != null) {
 		echo '
 		<div class="container" style="margin-top: 70px">
@@ -207,7 +207,7 @@ function gen_menu() {
 		<div class="col-lg-12 row">
 		  <div class="panel panel-default">
 		    <div class="panel-body">';
- 
+
 		    foreach ($menu as $m) {
 		        if ($url == $m['url']) {
 		          echo '<a href="'.base_url().'adm/'.$m['url'].'" class="btn btn-sq btn-warning"><i class="glyphicon glyphicon-'.$m['icon'].' g3x"></i><br><br/>'.$m['text'].' </a>';
@@ -227,4 +227,4 @@ function cek_hakakses($arr_yg_boleh_akses, $userid) {
 	if (!in_array($userid, $arr_yg_boleh_akses)) {
 		redirect('adm');
 	}
-}		
+}

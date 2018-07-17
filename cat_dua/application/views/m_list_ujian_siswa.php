@@ -8,7 +8,7 @@
             <tr>
               <th width="5%">No</th>
               <th width="20%">Nama Tes</th>
-              <th width="20%">Mapel / Guru</th>
+              <th width="20%">Jenis Soal</th>
               <th width="10%">Jumlah Soal</th>
               <th width="10%">Waktu</th>
               <th width="10%">Status</th>
@@ -17,11 +17,11 @@
           </thead>
 
           <tbody>
-            <?php 
+            <?php
               if (!empty($data)) {
                 $no = 1;
                 foreach ($data as $d) {
-                  
+
                   echo '<tr>
                         <td class="ctr">'.$no.'</td>
                         <td>'.$d->nama_ujian.'</td>
@@ -50,7 +50,7 @@
             ?>
           </tbody>
         </table>
-        </div>  
+        </div>
       </div>
     </div>
   </div>
